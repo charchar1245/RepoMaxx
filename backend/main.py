@@ -1,12 +1,13 @@
 import os
-from fastapi import FastAPI
+from fastapi import FastAPI, Depends
 from fastapi.middleware.cors import CORSMiddleware
 from pathlib import Path
 from dotenv import load_dotenv
+from sqlalchemy.orm import Session
 
 from database import engine, Base, SessionLocal
 from models import Incident
-from schemas import incidentCreate
+from schemas import IncidentCreate
 
 Base.metadata.create_all(bind=engine)
 
@@ -37,7 +38,7 @@ def hello():
 
 @app.post("/incidents")
 def create_incident(
-    incident: incidentCreate,
+    incident: IncidentCreate,
     db: Session = Depends(get_db)
 ):
     new_incident = Incident(
